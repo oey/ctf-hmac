@@ -29,12 +29,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 messageHmac = hmac.new(publicKnownKey, receivedMessage.encode(), hashlib.sha256).hexdigest().lower()
                 taskHmac = hmac.new(privateKey, receivedMessage.encode(), hashlib.sha256).hexdigest().lower()
                 print(f"hmac('{publicKnownKey}','{receivedMessage.encode()}') = {messageHmac}")
-                if receivedHmac == messageHmac:                    
+                if receivedHmac == messageHmac:         
+                    print(f"{receivedMessage} and {receivedHmac} are authenticated")           
                     conn.sendall("200 OK\n".encode())
                     conn.sendall(b"Your knowledge about HMAC is verified.\n")
                     conn.sendall(b"The following line can be used for proof of completed task.\n")
                     conn.sendall(f"{receivedMessage};{taskHmac}\n".encode())
                 elif receivedHmac == taskHmac:
+                    print(f"verified: {receivedMessage} and {receivedHmac} are authenticated") 
                     conn.sendall("200 OK\n".encode())
                     conn.sendall(b"The message below is authenticated and valid.\n")
                     conn.sendall(f"{receivedMessage}\n".encode())
