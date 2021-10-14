@@ -7,10 +7,8 @@ HOST = ''
 PORT = 31337        # Port to listen on (non-privileged ports are > 1023)
 
 errorMessage = "Expected <message>;<auth> not ".encode()
-test1 = "The quick brown fox jumps over the lazy dog"
-testkey = "key".encode()
 publicKnownKey = "ourSharedSecret".encode()
-privateKey = "Port to listen on (non-privileged ports are > 1023)".encode()
+privateKey = "898953458989753457348979534879 plus Port to listen on (non-privileged ports are > 1023)".encode()
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
@@ -28,9 +26,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if len(elements) == 2:
                 receivedMessage = elements[0]
                 receivedHmac = elements[1].lower()
-                messageHmac = hmac.new(testkey, receivedMessage.encode(), hashlib.sha256).hexdigest().lower()
+                messageHmac = hmac.new(publicKnownKey, receivedMessage.encode(), hashlib.sha256).hexdigest().lower()
                 taskHmac = hmac.new(privateKey, receivedMessage.encode(), hashlib.sha256).hexdigest().lower()
-                print(f"hmac('{testkey}','{receivedMessage.encode()}') = {messageHmac}")
+                print(f"hmac('{publicKnownKey}','{receivedMessage.encode()}') = {messageHmac}")
                 if receivedHmac == messageHmac:                    
                     conn.sendall("200 OK\n".encode())
                     conn.sendall(b"Your knowledge about HMAC is verified.\n")
