@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  hmac:
+    build: .
+    ports:
+      - "49295:31337"
+    restart: always
